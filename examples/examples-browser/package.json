@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "justadudewhohacks",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.19.2",
+    "punycode": "^2.3.1",
+    "request": "^2.88.2"
+  }
+}

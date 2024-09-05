@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Face Landmark Detection</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="face-api.js"></script>
+  <script src="js/commons.js"></script>
+  <script src="js/faceDetectionControls.js"></script>
+  <script src="js/imageSelectionControls.js"></script>
+  <style>
+      body {
+      background-color: #f4f4f4;
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .page-container {
+      max-width: 800px;
+      width: 100%;
+      margin: 20px;
+      padding: 30px;
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e0e0e0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 24px;
+      color: #333;
+    }
+
+    .center-content img {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 100%;
+      border-radius: 12px;
+    }
+
+    .side-by-side {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .side-by-side > div {
+      flex-grow: 1;
+      min-width: 180px;
+    }
+
+    .btn-custom {
+      background-color: #00509E; /* Classic navy color */
+      color: white;
+      font-weight: normal;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px; /* More rounded for a softer look */
+      border: 1px solid transparent;
+      text-align: center;
+      transition: background-color 0.3s, border 0.3s;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-custom:hover {
+      background-color: #003f7f;
+      border: 1px solid #003f7f; /* Adds a border on hover for emphasis */
+    }
+
+    .btn-custom i {
+      margin-right: 10px;
+    }
+
+    .input-field select {
+      display: block;
+    }
+
+    .row {
+      margin: 0;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    label {
+      font-size: 15px;
+      color: #444;
+    }
+
+    #selectList,
+    #ssd_mobilenetv1_controls,
+    #tiny_face_detector_controls {
+      margin-top: 20px;
+    }
+
+    #loader .indeterminate {
+      background-color: #00509E;
+    }
+
+    .file-field {
+      display: flex;
+      align-items: center;
+    }
+
+    .file-field input[type="file"] {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .input-field input[type="text"]:disabled {
+      background-color: #f0f0f0;
+      border-radius: 4px;
+    }
+
+    .side-by-side .input-field input,
+    .side-by-side .input-field select {
+      font-family: 'Georgia', serif; /* More classic font */
+      background-color: #f9f9f9; /* Softer input background */
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="navbar"></div>
+  <div class="center-content page-container">
+
+
+    <div class="progress" id="loader" style="display: none;">
+      <div class="indeterminate"></div>
+    </div>
+
+    <div style="position: relative">
+      <img id="inputImg" src="" alt="Selected Image" />
+      <canvas id="overlay"></canvas>
+    </div>
+
+    <div id="selectList"></div>
+<!-- 
+    <div class="side-by-side">
+      <div class="input-field">
+        <input id="imgUrlInput" type="text" class="bold" placeholder="Enter Image URL">
+        <label for="imgUrlInput">Get image from URL</label>
+      </div> -->
+      <!-- <button class="btn waves-effect waves-light btn-custom" onclick="loadImageFromUrl()">
+        <i class="fas fa-link"></i>
+      </button>
+    </div> -->
+
+    <div class="side-by-side file-field">
+      <div class="btn-custom btn">
+        <i class="fas fa-upload">Upload</i>
+        <input id="queryImgUploadInput" type="file" onchange="loadImageFromUpload()" accept=".jpg, .jpeg, .png">
+      </div>
+    </div>
+
+    <div class="side-by-side">
+      <div class="input-field">
+        <select id="selectFaceDetector">
+          <option value="ssd_mobilenetv1">SSD Mobilenet V1</option>
+          <option value="tiny_face_detector">Tiny Face Detector</option>
+        </select>
+        <label for="selectFaceDetector">Select Face Detector</label>
+      </div>
+      <div class="input-field">
+        <input type="checkbox" id="hideBoundingBoxesCheckbox" onchange="onChangeHideBoundingBoxes(event)" />
+        <label for="hideBoundingBoxesCheckbox">Hide Bounding Boxes</label>
+      </div>
+    </div>
+
+    <div id="ssd_mobilenetv1_controls" class="side-by-side">
+      <div class="input-field">
+        <input id="minConfidence" type="text" class="bold" value="0.5" disabled>
+        <label for="minConfidence">Min Confidence</label>
+      </div>
+      <button class="btn-custom btn" onclick="onDecreaseMinConfidence()">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button class="btn-custom btn" onclick="onIncreaseMinConfidence()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <div id="tiny_face_detector_controls" class="side-by-side">
+      <div class="input-field">
+        <select id="inputSize">
+          <option value="" disabled selected>Input Size</option>
+          <option value="160">160 x 160</option>
+          <option value="224">224 x 224</option>
+          <option value="320">320 x 320</option>
+          <option value="416">416 x 416</option>
+          <option value="512">512 x 512</option>
+          <option value="608">608 x 608</option>
+        </select>
+        <label for="inputSize">Input Size</label>
+      </div>
+      <div class="input-field">
+        <input id="scoreThreshold" type="text" class="bold" value="0.5" disabled>
+        <label for="scoreThreshold">Score Threshold</label>
+      </div>
+      <button class="btn-custom btn" onclick="onDecreaseScoreThreshold()">
+        <i class="fas fa-minus"></i>
+      </button>
+      <button class="btn-custom btn" onclick="onIncreaseScoreThreshold()">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    let withBoxes = true;
+
+    function onChangeHideBoundingBoxes(e) {
+      withBoxes = !$(e.target).prop('checked');
+      updateResults();
+    }
+
+    async function updateResults() {
+      if (!isFaceDetectionModelLoaded()) {
+        return;
+      }
+
+      const inputImgEl = $('#inputImg').get(0);
+      const options = getFaceDetectorOptions();
+
+      const results = await faceapi.detectAllFaces(inputImgEl, options).withFaceLandmarks();
+
+      const canvas = $('#overlay').get(0);
+      faceapi.matchDimensions(canvas, inputImgEl);
+      const resizedResults = faceapi.resizeResults(results, inputImgEl);
+
+      if (withBoxes) {
+        faceapi.draw.drawDetections(canvas, resizedResults);
+      }
+      faceapi.draw.drawFaceLandmarks(canvas, resizedResults);
+    }
+
+    async function run() {
+      await changeFaceDetector(SSD_MOBILENETV1);
+      await faceapi.loadFaceLandmarkModel('/');
+
+      updateResults();
+    }
+
+    $(document).ready(function() {
+      renderNavBar('#navbar', 'face_landmark_detection');
+      initImageSelectionControls();
+      initFaceDetectionControls();
+      run();
+    });
+  </script>
+
+</body>
+</html>
+    

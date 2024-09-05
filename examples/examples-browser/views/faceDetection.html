@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <!-- Add this line inside the <head> section of your HTML -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+
+  <script src="face-api.js"></script>
+  <script src="js/commons.js"></script>
+  <script src="js/faceDetectionControls.js"></script>
+  <script src="js/imageSelectionControls.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css" />
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
+  <style>
+    /* body {
+        background-color: #fafafa; 
+        font-family: "Roboto", sans-serif; 
+        color: #333; 
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      } */
+
+    body {
+      background-color: #f4f4f4;
+      font-family: 'Georgia', serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .center-content {
+      max-width: 900px;
+      /* Increased width for better layout */
+      width: 100%;
+      padding: 30px;
+      /* Added more padding for spacing */
+      background-color: #ffffff;
+      /* White background */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* Soft shadow for depth */
+      border-radius: 8px;
+      /* Rounded corners */
+    }
+
+    .progress {
+      background-color: #e0e0e0;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .progress .indeterminate {
+      background-color: #007bff !important;
+      /* Classic blue accent color */
+    }
+
+    .btn {
+      background-color: #004080;
+      /* Classic navy blue */
+      color: white;
+      border-radius: 4px;
+      /* Rounded button corners */
+    }
+
+    .btn:hover {
+      background-color: #003366;
+      /* Darker navy blue for hover */
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .side-by-side {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      /* Increased gap between elements */
+      margin-top: 20px;
+    }
+
+    .side-by-side .row {
+      flex: 1;
+      margin-bottom: 10px;
+    }
+
+    #overlay {
+      border: 1px solid #ddd;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 8px;
+      /* Rounded corners for overlay */
+    }
+
+    #inputImg {
+      display: block;
+      max-width: 100%;
+      margin: 0 auto;
+      border-radius: 8px;
+      /* Rounded corners for image */
+    }
+
+    .details-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      /* Increased gap between control groups */
+      margin-top: 20px;
+    }
+
+    .control-group {
+      background-color: #f5f5f5;
+      /* Light gray background */
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      /* Rounded corners */
+      padding: 15px;
+      /* Increased padding for better spacing */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* Soft shadow for depth */
+    }
+
+    .control-group label {
+      font-weight: bold;
+      color: #333;
+      /* Dark slate gray for labels */
+      margin-bottom: 5px;
+      /* Reduced margin to bring label closer to content */
+      display: block;
+    }
+
+    .control-group .row {
+      margin-bottom: 15px;
+      /* Increased margin-bottom for spacing */
+    }
+
+    .control-group .row input,
+    .control-group .row select {
+      margin-top: 0;
+      /* Removed margin-top to align with label */
+      height: 36px;
+      /* Ensure consistent input height */
+    }
+
+    .control-group .btn {
+      margin-top: 10px;
+      /* Increased margin-top for spacing */
+    }
+
+    .url-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      /* Space between elements */
+    }
+
+    .url-controls label {
+      flex: 1;
+      margin: 0;
+    }
+
+    .url-controls input {
+      flex: 2;
+    }
+
+    .file-upload-controls {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .file-upload-controls .file-input {
+      padding: 8px 12px;
+      border-radius: 4px;
+      border: 2px solid #004080;
+      /* Navy blue border */
+      background-color: #e9f5ff;
+      /* Light blue background */
+      width: 100%;
+      cursor: pointer;
+      box-sizing: border-box;
+      color: #333;
+      text-align: end;
+    }
+
+    .file-upload-controls .file-input::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    .file-upload-controls .file-input::before {
+      content: "Choose File";
+      display: inline-block;
+      background: #004080;
+      /* Navy blue background */
+      color: white;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 14px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    .file-upload-controls .file-input:hover::before {
+      background: #003366;
+      /* Darker navy blue for hover */
+    }
+
+    .face-detector-controls {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      /* Space between controls */
+    }
+
+    .face-detector-controls .control-group {
+      flex: 1;
+      height: 80px;
+      /* Ensures consistent height */
+    }
+
+    .face-detector-controls .row select,
+    .face-detector-controls .row input {
+      height: 36px;
+      /* Ensures consistent input height */
+    }
+
+    /* Alignment adjustments for minConfidence controls */
+    #ssd_mobilenetv1_controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    #ssd_mobilenetv1_controls .row {
+      margin-top: 10%;
+      flex: 1;
+    }
+
+    #ssd_mobilenetv1_controls .row input {
+      width: calc(100% - 60px);
+      /* Adjust width to align with buttons */
+    }
+
+    .circular-btn {
+      border-radius: 50%;
+      /* Circular shape */
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      font-size: 20px;
+      line-height: 20px;
+      color: white;
+      /* Text color */
+      box-shadow: none;
+      /* Remove any box shadow */
+      transition: background-color 0.5s ease;
+      /* Smooth color transition */
+    }
+
+    .decrease-btn {
+      background-color: rgb(216, 38, 38);
+      /* Vibrant red */
+    }
+
+    .increase-btn {
+      background-color: #35cf35;
+      /* Vibrant green */
+    }
+
+    /* Darken the colors on hover */
+    .decrease-btn:hover {
+      background-color: #8a0202;
+      /* Darker red on hover */
+    }
+
+    .increase-btn:hover {
+      background-color: #045e01;
+      /* Darker green on hover */
+    }
+
+    /* Disable Materialize's waves effect background color change */
+    .circular-btn.waves-effect .waves-ripple {
+      background-color: transparent !important;
+    }
+
+    #selectList {
+      margin-left: auto;
+      padding: 8px;
+      /* Padding for a refined appearance */
+      background-color: #f5f5f5;
+      /* Light gray background */
+      border: 1px solid #ccc;
+      /* Subtle border for a refined look */
+      border-radius: 12px;
+      /* More rounded corners */
+      max-width: 200px;
+      /* Fixed width */
+      display: flex;
+      /* Aligns children (icon and list) in a row */
+      align-items: center;
+      /* Vertically centers items within the container */
+      gap: 20px;
+      /* Space between icon and list items */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #selectList i {
+      font-size: 24px;
+      /* Size of the icon */
+      color: #333;
+      /* Icon color */
+      display: flex;
+      align-items: center;
+      /* Align icon vertically */
+    }
+
+    #selectList ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      /* Stack list items vertically */
+      align-items: flex-start;
+      /* Align items to the start of the flex container */
+      gap: 10px;
+      /* Space between list items */
+      max-height: 150px;
+      /* Maximum height for scrolling */
+      overflow-y: auto;
+      /* Enable vertical scrolling */
+    }
+  </style>
+</head>
+
+<body>
+  <div id="navbar"></div>
+  <div class="center-content page-container">
+    <div class="progress" id="loader">
+      <div class="indeterminate"></div>
+    </div>
+
+    <div style="position: relative; margin: 0 auto">
+      <img id="inputImg" src="" />
+      <canvas id="overlay"></canvas>
+    </div>
+
+    <div class="details-container">
+      <div class="side-by-side">
+        <div class="fas fa-image control-group file-upload-controls" style="font-size: 24px">
+          <b style="font-size: 12px; margin-left: 5%">Upload image:</b><input id="queryImgUploadInput" type="file"
+            class="file-input fas fa-image" onchange="loadImageFromUpload()" accept=".jpg, .jpeg, .png" />
+        </div>
+
+        <div id="selectList" class="fas fa-people">
+          <i class="fas fa-users"></i>
+        </div>
+      </div>
+
+      <div class="control-group url-controls">
+        <label for="imgUrlInput">Get image from URL:
+          <input id="imgUrlInput" type="text" class="bold" /></label>
+        <button class="waves-effect waves-light btn" onclick="loadImageFromUrl()">
+          <i class="fa fa-paper-plane"></i>
+        </button>
+      </div>
+
+      <div class="control-group face-detector-controls">
+        <div class="control-group" id="face_detector_selection_control">
+          <div class="row input-field">
+            <select id="selectFaceDetector">
+              <option value="ssd_mobilenetv1">SSD Mobilenet V1</option>
+              <option value="tiny_face_detector">Tiny Face Detector</option>
+            </select>
+            <label>Select Face Detector</label>
+          </div>
+        </div>
+
+        <div class="control-group" id="ssd_mobilenetv1_controls">
+          <div class="row side-by-side">
+            <div class="row">
+              <label for="minConfidence">Min Confidence:</label>
+              <input disabled value="0.5" id="minConfidence" type="text" class="bold" />
+            </div>
+            <button class="waves-effect waves-light btn circular-btn decrease-btn" onclick="onDecreaseMinConfidence()">
+              -
+            </button>
+            <button class="waves-effect waves-light btn circular-btn increase-btn" onclick="onIncreaseMinConfidence()">
+              +
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group" id="tiny_face_detector_controls">
+        <div class="row side-by-side">
+          <div class="row input-field">
+            <select id="inputSize">
+              <option value="" disabled selected>Input Size:</option>
+              <option value="160">160 x 160</option>
+              <option value="224">224 x 224</option>
+              <option value="320">320 x 320</option>
+              <option value="416">416 x 416</option>
+              <option value="512">512 x 512</option>
+              <option value="608">608 x 608</option>
+            </select>
+            <label>Input Size</label>
+          </div>
+          <div class="row">
+            <label for="scoreThreshold">Score Threshold:</label>
+            <input disabled value="0.5" id="scoreThreshold" type="text" class="bold" />
+          </div>
+          <button class="waves-effect waves-light btn circular-btn decrease-btn" onclick="onDecreaseMinConfidence()">
+            -
+          </button>
+          <button class="waves-effect waves-light btn circular-btn increase-btn" onclick="onIncreaseMinConfidence()">
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function updateResults() {
+      if (!isFaceDetectionModelLoaded()) {
+        return;
+      }
+
+      const inputImgEl = $("#inputImg").get(0);
+      const options = getFaceDetectorOptions();
+
+      const results = await faceapi.detectAllFaces(inputImgEl, options);
+
+      const canvas = $("#overlay").get(0);
+      faceapi.matchDimensions(canvas, inputImgEl);
+      faceapi.draw.drawDetections(
+        canvas,
+        faceapi.resizeResults(results, inputImgEl)
+      );
+    }
+
+    async function run() {
+      await changeFaceDetector(SSD_MOBILENETV1);
+      updateResults();
+    }
+
+    $(document).ready(function () {
+      renderNavBar("#navbar", "face_detection");
+      initImageSelectionControls();
+      initFaceDetectionControls();
+      run();
+    });
+  </script>
+</body>
+
+</html>
