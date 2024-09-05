@@ -1,48 +1,47 @@
-
-
-    <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <title>Responsive Tailwind Login Page</title>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width" />
-      <script src="https://cdn.tailwindcss.com"></script>
-    </head>
-  <body class="max-h-screen">
-    <section class="border-red-500 bg-gray-200 min-h-screen flex items-center justify-center">
-      <div class="bg-gray-100 p-5 flex rounded-2xl shadow-lg max-w-3xl">
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Motion Mirror</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+      body { 
+        font-family: 'Poppins', sans-serif; 
+      }
+      .btn-animate:hover {
+        transform: scale(1.05);
+        background-color: #3b82f6; /* Slightly lighter blue */
+      }
+    </style>
+  </head>
+  <body class="max-h-screen bg-gradient-to-r from-gray-200 to-gray-300">
+    <section class="min-h-screen flex items-center justify-center">
+      <div class="bg-gray-100 p-5 flex rounded-3xl shadow-lg max-w-3xl transform transition-all duration-500 hover:scale-105">
         <div class="md:w-1/2 px-5">
-          <h2 class="text-2xl font-bold text-[#002D74]">Login</h2>
+          <h2 class="text-3xl font-bold text-[#002D74]">Login</h2>
           <p class="text-sm mt-4 text-[#002D74]">If you have an account, please login</p>
           <form class="mt-6" action="/login" method="POST">
             <div>
               <label class="block text-gray-700">Email Address</label>
-              <input type="email" name="" id="" placeholder="Enter Email Address" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none" autofocus autocomplete required>
+              <input type="email" placeholder="Enter Email Address" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none shadow-md focus:shadow-lg transition-shadow duration-300" autofocus autocomplete required>
             </div>
 
             <div class="mt-4">
               <label class="block text-gray-700">Password</label>
-              <input type="password" name="" id="" placeholder="Enter Password" minlength="6" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500
-                    focus:bg-white focus:outline-none" required>
+              <input type="password" placeholder="Enter Password" minlength="6" class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none shadow-md focus:shadow-lg transition-shadow duration-300" required>
             </div>
 
-            
-
-            <button type="submit" class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg
-                  px-4 py-3 mt-6">Log In</button>
+            <button type="submit" class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 mt-6 btn-animate transition-transform duration-300">Log In</button>
           </form>
-
-      
-
-
-          
         </div>
 
-        <div class="w-1/2 md:block hidden">
-          <img src="https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80" class="rounded-2xl" alt="page img">
+        <div class="w-1/2 md:block hidden relative">
+          <img src="https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1887&q=80" class="rounded-2xl opacity-80 filter " alt="page img">
+          <div class="absolute inset-0 bg-black opacity-25 rounded-2xl"></div> <!-- Dark overlay -->
         </div>
-
       </div>
     </section>
-    </body>
-  </html>
+  </body>
+</html>
