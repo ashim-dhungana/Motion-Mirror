@@ -35,7 +35,7 @@ app.post("/login", (req, res) => {
   const { username, password } = req.body;
 
   const validUsername = "admin";
-  const validPassword = "password123";
+  const validPassword = "password";
 
   if (username === validUsername && password === validPassword) {
     req.session.isLoggedIn = true;
