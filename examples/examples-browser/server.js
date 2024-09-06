@@ -36,14 +36,20 @@ app.post("/login", (req, res) => {
 
   const validUsername = "admin";
   const validPassword = "password";
-
-  if (username === validUsername && password === validPassword) {
+  
+  const validUsername2 = "krishnajunior8@gmail.com";
+  const validPassword2 = "youknowhoiam";
+  
+  if ((username === validUsername && password === validPassword) || (username === validUsername2 && password === validPassword2)) {
     req.session.isLoggedIn = true;
     res.redirect("/face_detection");
   } else {
     res.redirect("/?error=invalid");
   }
 });
+  
+
+
 
 // Log Out
 app.get("/logout", (req, res) => {
