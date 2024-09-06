@@ -145,34 +145,55 @@ function renderNavBar(navbarId, exampleUri) {
     menuContent.appendChild(li);
   });
 
-
   // Add Logout Button
   const logoutLi = document.createElement("li");
   const logoutButton = document.createElement("a");
   logoutButton.classList.add("waves-effect", "waves-light", "pad-sides-sm");
   logoutButton.href = "#";
   logoutButton.innerHTML = "Logout";
+
+  // Styling Logout Button
+  logoutButton.style.cssText = `
+  display: inline-block;
+  background-color: #3498db; /* Bluish color */
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 5px;
+  margin: auto;
+  transition: background-color 0.3s ease;
+  width: 10vw;
+  top: 40vh;
+  font-size: 16px;
+`;
+  logoutButton.onmouseover = () => {
+    logoutButton.style.backgroundColor = "#2980b9";
+  };
+  logoutButton.onmouseout = () => {
+    logoutButton.style.backgroundColor = "#3498db";
+  };
+
+  // Calling Logout Button
   logoutButton.onclick = () => {
-    // Call your logout function here
     handleLogout();
   };
+
+  logoutLi.style.textAlign = "center";
+  logoutLi.style.width = "95%";
+
   logoutLi.appendChild(logoutButton);
   menuContent.appendChild(logoutLi);
-
-
-
 
   $(".button-collapse").sideNav({
     menuWidth: 260,
   });
 }
 
-
 function handleLogout() {
-  console.log("handlelogout")
-  window.location.href = '/logout'; 
+  console.log("handlelogout");
+  window.location.href = "/logout";
 }
-
 
 function renderSelectList(
   selectListId,
