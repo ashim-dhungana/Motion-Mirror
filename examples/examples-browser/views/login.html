@@ -12,6 +12,10 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    .container{
+      top: -2vh;
+    }
+
     .btn-animate:hover {
       transform: scale(1.05);
       background-color: #3b82f6;
@@ -27,53 +31,95 @@
       height: 100%;
       border-radius: 1.5rem;
     }
+
+    .error-message {
+      color: red;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 10px;
+      margin-bottom: 15px;
+      text-align: center;
+      display: none;
+      /* Hidden by default */
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
   </style>
 </head>
 
 <body class="min-h-screen bg-gradient-to-r from-gray-200 to-gray-300 flex items-center justify-center">
-  <section
-    class="w-full max-w-4xl p-5 bg-gray-100 rounded-3xl shadow-lg flex items-center justify-center transform transition-all duration-500 hover:scale-105">
-    <!-- Left side (form) -->
-    <div class="w-full md:w-1/2 p-5">
-      <h2 class="text-3xl font-bold text-[#002D74]">Welcome to <br> Motion Mirror</h2>
-      <p class="text-sm mt-4 text-[#002D74]">If you have an account, please login</p>
 
-      <form class="mt-6" action="/login" method="POST">
-        <div class="mb-4">
-          <label class="block text-gray-700">Username</label>
-          <input type="text" name="username"
-            class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none shadow-md focus:shadow-lg transition-shadow duration-300"
-            required autofocus autocomplete="username">
-        </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700">Password</label>
-          <input type="password" name="password"
-            class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none shadow-md focus:shadow-lg transition-shadow duration-300"
-            required autocomplete="current-password">
-        </div>
-
-        <button type="submit"
-          class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 btn-animate transition-transform duration-300">Log
-          In</button>
-      </form>
+  <div class="flex flex-col items-center w-full max-w-4xl">
+    <div class="container error-message bg-red-100 text-red-600 p-3 rounded-lg mb-4 text-center w-80 hidden relative" id="error-message">
+      <span class="text-red-600 text-xl font-bold mr-2">❌</span>
+      Invalid username or password
     </div>
 
-    <!-- Right side (image) -->
-    <div class="hidden md:block w-1/2 relative">
-      <img src="logo.jpg" class="rounded-2xl object-cover w-full h-full" alt="Page image">
+    <section
+      class="w-full max-w-4xl p-5 bg-gray-100 rounded-3xl shadow-lg flex items-center justify-center transform transition-all duration-500 hover:scale-105">
 
-    </div>
-  </section>
+      <!-- Left side (form) -->
+      <div class="w-full md:w-1/2 p-5">
+        <h2 class="text-3xl font-bold text-[#002D74]">Welcome to <br> Motion Mirror</h2>
+        <p class="text-sm mt-4 text-[#002D74]">If you have an account, please login</p>
 
-  <script>
-    window.onload = function() {
-      const url = new URLSearchParams(window.location.search);
-      if (url.has('error')){
-        alert('Invalid username or password')
+        <form class="mt-6" action="/login" method="POST">
+          <div class="mb-4">
+            <label class="block text-gray-700">Username</label>
+            <input type="text" name="username"
+              class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none shadow-md focus:shadow-lg transition-shadow duration-300"
+              required autofocus autocomplete="username">
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-gray-700">Password</label>
+            <input type="password" name="password"
+              class="w-full px-4 py-3 rounded-lg bg-gray-200 mt-2 border focus:border-blue-500 focus:bg-white focus:outline-none shadow-md focus:shadow-lg transition-shadow duration-300"
+              required autocomplete="current-password">
+          </div>
+
+          <button type="submit"
+            class="w-full block bg-blue-500 hover:bg-blue-400 focus:bg-blue-400 text-white font-semibold rounded-lg px-4 py-3 btn-animate transition-transform duration-300">Log
+            In</button>
+        </form>
+      </div>
+
+      <!-- Right side (image) -->
+      <div class="hidden md:block w-1/2 relative">
+        <img src="logo.jpg" class="rounded-2xl object-cover w-full h-full" alt="Page image">
+
+      </div>
+    </section>
+
+    <script>
+      window.onload = function () {
+        const url = new URLSearchParams(window.location.search);
+        if (url.has('error')) {
+          document.getElementById('error-message').style.display = 'block';
+        }
       }
-    }
-  </script>
+    </script>
 
 
 </body>
