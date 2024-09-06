@@ -44,7 +44,7 @@ app.post("/login", (req, res) => {
     req.session.isLoggedIn = true;
     res.redirect("/face_detection");
   } else {
-    res.status(401).send("Invalid username or password");
+    res.redirect("/?error=invalid");
   }
 });
   
