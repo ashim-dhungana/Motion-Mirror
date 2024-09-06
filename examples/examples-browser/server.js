@@ -41,7 +41,7 @@ app.post("/login", (req, res) => {
     req.session.isLoggedIn = true;
     res.redirect("/face_detection");
   } else {
-    res.status(401).send("Invalid username or password");
+    res.redirect("/?error=invalid");
   }
 });
 
@@ -52,12 +52,10 @@ app.get("/logout", (req, res) => {
       console.error("Error during logout:", err);
       return res.status(500).send("Error Logging Out");
     }
-    console.log("logout")
+    console.log("logout");
     res.redirect("/");
   });
 });
-
-
 
 // Protect the routes
 function checkAuth(req, res, next) {
@@ -123,7 +121,6 @@ app.get("/batch_face_landmarks", checkAuth, (req, res) =>
 app.get("/batch_face_recognition", checkAuth, (req, res) =>
   res.sendFile(path.join(viewsDir, "batchFaceRecognition.html"))
 );
-
 
 app.post("/fetch_external_image", async (req, res) => {
   const { imageUrl } = req.body;
